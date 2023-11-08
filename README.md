@@ -11,4 +11,8 @@ saving code for course nlp
 
 ### 前端神经网络
 
-根据词典构建词向量tableLt
+在模型初始化阶段由nn.Embedding构建词向量tableLt，在分词构建词典过程中每个词以下标获取tabelLt上的对应向量
+
+训练方法：
+
+网络输入数据是index，如二元LM，输入context(index1,index2)，label(index3)
