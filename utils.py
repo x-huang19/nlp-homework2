@@ -36,7 +36,7 @@ class FNNLM(nn.Module):
         
 class dataset(Dataset):
     # 根据分词后训练集，每三个词之间为3gram
-    def __init__(self, trigram, voc, index):
+    def __init__(self, trigram, voc):
         
         self.context = []
         self.labels = []
@@ -65,20 +65,69 @@ class dataset(Dataset):
         label = self.labels[index]
         return context, label
     
-def dataloader(path, batch_size):
+def dataloader(trigram, voc, batch_size):
     
-    mydataset = dataset(path)
-    return DataLoader(mydataset, batch_siz=batch_size, shuffle=False)
+    mydataset = dataset(trigram, voc)
+    return DataLoader(mydataset, batch_size=batch_size, shuffle=False)
 
+def train(model, dataloader, loss_function, optimizer, device, batch_size, epoch):
+    
+    model.train()
+    file1 = open("log.txt", "a")
+    file1.write('start training\n')
+    losses = []
+    BATCH_NUM = 10000
+    
+    for epochnum in range(1, epoch + 1):
+        
+        model.train()
+        start = time.time()
+        counter = 0
+        totalcount = 0
+        
+        for index, text in enumerate(dataloader):
+            
+            label = text[1].to(device)
+            text = text[0]
+            optimizer.zero_grad()
+            log_probs = model(text)
+            loss = loss_function(log_probs, label)
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+            losses.append(total_loss)
+            counter+=1
+            #Prints out log file every BATCH_NUM size
+            if counter == BATCH_NUM:
+                end = time.time()
+                time_taken = end - start
+                totalcount +=counter
+                cur_loss = total_loss/totalcount
+                #Write to file
+                file1.write("\n")
+                file1.write('| epoch {:3d} | {:5d}/{:5d} batches | ' 'lr {:02.2f} | ms/batches {:5.2f} | ' 'loss {:5.2f} | ppl {:8.2f}'.format(epochnum, totalcount, len(dataloader) , LR,time_taken,cur_loss, math.exp(cur_loss)))
+                #System Write
+                print('| epoch {:3d} | {:5d}/{:5d} batches | ' 'lr {:02.2f} | ms/batches {:5.2f} | ' 'loss {:5.2f} | ppl {:8.2f}'.format(epochnum, totalcount, len(dataloader) , LR,time_taken,cur_loss, math.exp(cur_loss)))
+                counter = 0
+                start = time.time()   
+ 
+    
+def val(model, dataloader, loss_function, optimizer, device, batch_size, epoch):
+    
+    print('s')
 if __name__ == "__main__":
     
     # 超参数定义
+    lr = 0.05
+    batch_size = 1 
     p = 0.5
+    epochs = 3
     index = 0
     vocab_size = 0
-    embedded_size = 100
+    embedded_size = 256
     context_size = 3
     th = 200
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     vocab_dict = {} # 统计每个词出现频率
     tokens = {} # 根据阈值筛选词
     index_dict = {} #
@@ -117,10 +166,23 @@ if __name__ == "__main__":
         sentence = re.sub(r'[^\u4e00-\u9fa5，。]', '', context[m])
         cutwords = jieba.lcut(sentence)
         words = []
+        for cell in cutwords:
+            if cell in tokens.keys():
+                words.append(cell)
+            else:
+                words.append('unk')
+        for n in range(len(words) - 3):
+            trigram.append(([words[n],words[n + 1],words[n + 2]],words[n + 3]))
         
-        for n in range(len(cutwords) - 2):
-            print('s')
-        
+    # part3 training   
+    model = FNNLM(vocab_size, embedded_size, context_size).to(device)       
+    mydataloader = dataloader(trigram, tokens, batch_size)
+    loss_function = nn.NLLLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    #Changes Learning Rate according optimization
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.1) 
+    train(model, dataloader, loss_function, optimizer, device, batch_size, epochs)   
+     
     f.close()  
 
     
