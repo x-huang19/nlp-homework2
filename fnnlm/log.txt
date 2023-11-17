@@ -1,0 +1,20 @@
+start training
+
+| epoch   1 | 10000/135567 batches | lr 0.05 | ms/batches 27.62 | loss  4.84 | ppl   126.11
+| epoch   1 | 20000/135567 batches | lr 0.05 | ms/batches 29.48 | loss  4.74 | ppl   114.06
+| epoch   1 | 30000/135567 batches | lr 0.05 | ms/batches 28.25 | loss  4.69 | ppl   108.69
+| epoch   1 | 40000/135567 batches | lr 0.05 | ms/batches 29.20 | loss  4.66 | ppl   105.15
+| epoch   1 | 50000/135567 batches | lr 0.05 | ms/batches 29.50 | loss  4.63 | ppl   102.43
+| epoch   1 | 60000/135567 batches | lr 0.05 | ms/batches 29.51 | loss  4.61 | ppl   100.40
+| epoch   1 | 70000/135567 batches | lr 0.05 | ms/batches 30.56 | loss  4.59 | ppl    98.69
+| epoch   1 | 80000/135567 batches | lr 0.05 | ms/batches 29.63 | loss  4.58 | ppl    97.15
+| epoch   1 | 90000/135567 batches | lr 0.05 | ms/batches 30.04 | loss  4.56 | ppl    95.77
+| epoch   1 | 100000/135567 batches | lr 0.05 | ms/batches 26.53 | loss  4.55 | ppl    94.78
+| epoch   1 | 110000/135567 batches | lr 0.05 | ms/batches 29.13 | loss  4.54 | ppl    93.79
+| epoch   1 | 120000/135567 batches | lr 0.05 | ms/batches 25.98 | loss  4.53 | ppl    92.92
+| epoch   1 | 130000/135567 batches | lr 0.05 | ms/batches 28.43 | loss  4.52 | ppl    92.06
+End of Epoch 1
+Evaluation for validation data : 0.30270108043217286
+Time : 16.146629095077515
+loss : 0.21338799618014626
+ppl : 1.2378648449122853

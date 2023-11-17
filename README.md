@@ -16,3 +16,8 @@ saving code for course nlp
 训练方法：
 
 网络输入数据是index，如二元LM，输入context(index1,index2)，label(index3)
+
+### RNNLM
+
+训练数据输入dataloader每一次输送的输入维度应该是(N,L - 1,embedd_size) label(L - 1, one-hot)
+
