@@ -2,7 +2,9 @@ import torch
 import torch.nn as nn
 import jieba
 
+n = 4
+upper_tri = torch.tensor(float('-inf')).repeat((n, n))
+lower_tri = torch.tril(torch.ones((n, n)))
+matrix = upper_tri.triu(diagonal=1) + lower_tri
 
-a = torch.randn((1,3,10))
-print(a)
-print(a[0].argmax(1))
+print(matrix)
